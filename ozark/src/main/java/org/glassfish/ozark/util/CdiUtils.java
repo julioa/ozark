@@ -43,8 +43,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
+import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for CDI-related tasks. This is a CDI class itself and can be
@@ -87,4 +92,37 @@ public class CdiUtils {
         final CreationalContext<T> ctx = bm.createCreationalContext(bean);
         return (T) bm.getReference(bean, clazz, ctx);
     }
+
+    /**
+     * @param beforeBean  The BeforeBeanDiscovery.
+     * @param bm The BeanManager.
+     * @param types annotated types to register
+     */
+    public static void addAnnotatedTypes(BeforeBeanDiscovery beforeBean, BeanManager bm, Class<?>... types) {
+        for (Class<?> type : types) {
+            beforeBean.addAnnotatedType(bm.createAnnotatedType(type), type.getName());
+        }
+    }
+
+    /**
+     * Returns a list of CDI beans with the specified bean type and qualifiers.
+     * Please note that this method supports looking up beans deployed with the application
+     * even if Ozark is deployed as a container archive.
+     */
+    public static <T> List<T> getApplicationBeans(Class<T> type, Annotation... qualifiers) {
+        BeanManager manager = getApplicationBeanManager();
+        return manager.getBeans(type, qualifiers).stream()
+                .map(bean -> (T) manager.getReference(bean, type, manager.createCreationalContext(bean)))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * This method returns a {@link BeanManager} which can resolve beans defined in the application.
+     * In case of Glassfish the injected {@link BeanManager} doesn't work here as it only resolves
+     * beans in the Ozark archive if Ozark is installed as part of the container.
+     */
+    public static BeanManager getApplicationBeanManager() {
+        return CDI.current().getBeanManager();
+    }
+
 }

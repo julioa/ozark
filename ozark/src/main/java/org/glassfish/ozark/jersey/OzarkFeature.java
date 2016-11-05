@@ -41,18 +41,15 @@ package org.glassfish.ozark.jersey;
 
 import org.glassfish.jersey.internal.spi.AutoDiscoverable;
 import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
-import org.glassfish.ozark.MvcAppConfig;
+import org.glassfish.ozark.binding.BindingInterceptorImpl;
 import org.glassfish.ozark.core.ViewRequestFilter;
 import org.glassfish.ozark.core.ViewResponseFilter;
 import org.glassfish.ozark.core.ViewableWriter;
 import org.glassfish.ozark.locale.LocaleRequestFilter;
 import org.glassfish.ozark.security.CsrfProtectFilter;
 import org.glassfish.ozark.security.CsrfValidateInterceptor;
-import org.glassfish.ozark.binding.BindingInterceptorImpl;
 
 import javax.annotation.Priority;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
 import javax.mvc.annotation.Controller;
 import javax.servlet.ServletContext;
 import javax.ws.rs.ConstrainedTo;
@@ -63,7 +60,6 @@ import javax.ws.rs.core.FeatureContext;
 import java.util.Arrays;
 
 import static org.glassfish.ozark.util.AnnotationUtils.getAnnotation;
-import static org.glassfish.ozark.util.CdiUtils.newBean;
 
 /**
  * <p>Jersey feature that sets up the JAX-RS pipeline for MVC processing using one
@@ -74,6 +70,7 @@ import static org.glassfish.ozark.util.CdiUtils.newBean;
  * SPI in Jersey.</p>
  *
  * @author Santiago Pericas-Geertsen
+ * @author Eddú Meléndez
  */
 @ConstrainedTo(RuntimeType.SERVER)
 @Priority(AutoDiscoverable.DEFAULT_PRIORITY)
@@ -99,17 +96,11 @@ public class OzarkFeature implements ForcedAutoDiscoverable {
             context.register(CsrfValidateInterceptor.class);
             context.register(CsrfProtectFilter.class);
             context.register(LocaleRequestFilter.class);
-
-            // Initialize application config object in Mvc class
-            final BeanManager bm = CDI.current().getBeanManager();
-            final MvcAppConfig appConfig = newBean(bm, MvcAppConfig.class);
-            appConfig.setConfig(config);
-            appConfig.setContextPath(servletContext.getContextPath());
         }
     }
 
     private boolean isController(Class<?> c) {
         return getAnnotation(c, Controller.class) != null ||
-                Arrays.asList(c.getMethods()).stream().anyMatch(m -> getAnnotation(m, Controller.class) != null);
+                Arrays.stream(c.getMethods()).anyMatch(m -> getAnnotation(m, Controller.class) != null);
     }
 }

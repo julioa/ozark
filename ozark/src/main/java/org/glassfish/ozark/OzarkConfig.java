@@ -39,65 +39,33 @@
  */
 package org.glassfish.ozark;
 
-import org.glassfish.ozark.servlet.OzarkContainerInitializer;
-import org.glassfish.ozark.util.PathUtils;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
+import javax.mvc.security.Csrf;
 import javax.ws.rs.core.Configuration;
-import java.util.logging.Logger;
+import javax.ws.rs.core.Context;
 
 /**
- * This application scoped class holds all the global configuration like the
- * context and application path and is used by {@link MvcContextImpl} to expose
- * this information to the user.
+ * This class encapsulates the effective runtime configuration. All methods
+ * will return either the explicitly configured configuration value or the default
+ * value.
+ *
+ * @author Christian Kaltepoth
  */
-@ApplicationScoped
-public class MvcAppConfig {
+public class OzarkConfig {
 
-    private static final Logger log = Logger.getLogger(MvcAppConfig.class.getName());
-
-    private String contextPath;
-
-    private String applicationPath;
-
+    @Context
     private Configuration config;
 
-    @Inject
-    private ServletContext servletContext;
+    public Csrf.CsrfOptions getCsrfOptions() {
 
-    @PostConstruct
-    public void init() {
-
-        Object appPath = servletContext.getAttribute(OzarkContainerInitializer.APP_PATH_CONTEXT_KEY);
-        if (appPath != null) {
-            this.applicationPath = PathUtils.normalizePath(appPath.toString());
-        } else {
-            log.warning("Unable to detect application path. " +
-                    "This means that ${mvc.applicationPath} and ${mvc.basePath} will not work correctly");
+        // check for the config property
+        final Object value = config.getProperty(Csrf.CSRF_PROTECTION);
+        if (value instanceof Csrf.CsrfOptions) {
+            return (Csrf.CsrfOptions) value;
         }
 
-    }
-    
-    public String getContextPath() {
-        return contextPath;
+        // default as defined in the spec
+        return Csrf.CsrfOptions.EXPLICIT;
+
     }
 
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;     // normalized by servlet
-    }
-
-    public String getApplicationPath() {
-        return applicationPath;
-    }
-
-    public Configuration getConfig() {
-        return config;
-    }
-
-    public void setConfig(Configuration config) {
-        this.config = config;
-    }
 }

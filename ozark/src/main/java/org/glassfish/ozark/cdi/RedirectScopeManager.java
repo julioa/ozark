@@ -41,6 +41,7 @@ package org.glassfish.ozark.cdi;
 
 import org.glassfish.ozark.Properties;
 import org.glassfish.ozark.event.ControllerRedirectEventImpl;
+import org.glassfish.ozark.util.CdiUtils;
 import org.glassfish.ozark.util.PropertyUtils;
 
 import javax.annotation.PostConstruct;
@@ -84,12 +85,6 @@ public class RedirectScopeManager {
     private static final String INSTANCE = "Instance-";
     private static final String CREATIONAL = "Creational-";
     private static final String COOKIE_NAME = PREFIX + "Cookie";
-
-    /**
-     * Stores the beanManager.
-     */
-    @Inject
-    BeanManager beanManager;
 
     /**
      * Stores the HTTP servlet request we are working for.
@@ -258,6 +253,7 @@ public class RedirectScopeManager {
                     String key = entrySet.getKey();
                     Object value = entrySet.getValue();
                     if (key.startsWith(INSTANCE)) {
+                        BeanManager beanManager = CdiUtils.getApplicationBeanManager();
                         Bean<?> bean = beanManager.resolve(beanManager.getBeans(value.getClass()));
                         destroy(bean);
                     }

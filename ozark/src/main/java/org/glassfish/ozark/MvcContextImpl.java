@@ -39,15 +39,25 @@
  */
 package org.glassfish.ozark;
 
+import org.glassfish.ozark.servlet.OzarkContainerInitializer;
+import org.glassfish.ozark.util.PathUtils;
+
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mvc.MvcContext;
+import javax.mvc.MvcUriBuilder;
 import javax.mvc.security.Csrf;
 import javax.mvc.security.Encoders;
+import javax.servlet.ServletContext;
 import javax.ws.rs.core.Configuration;
-
+import javax.ws.rs.core.Context;
+import java.net.URI;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Implementation of {@link javax.mvc.MvcContext}.
@@ -58,6 +68,8 @@ import java.util.Locale;
 @RequestScoped
 public class MvcContextImpl implements MvcContext {
 
+    private static final Logger log = Logger.getLogger(MvcContextImpl.class.getName());
+
     @Inject
     private Csrf csrf;
 
@@ -65,18 +77,40 @@ public class MvcContextImpl implements MvcContext {
     private Encoders encoders;
 
     @Inject
-    private MvcAppConfig appConfig;
+    private ServletContext servletContext;
+
+    @Context
+    private Configuration configuration;
 
     private Locale locale;
 
+    private String applicationPath;
+
+    @PostConstruct
+    public void init() {
+
+        Object appPath = servletContext.getAttribute(OzarkContainerInitializer.APP_PATH_CONTEXT_KEY);
+        if (appPath != null) {
+            this.applicationPath = PathUtils.normalizePath(appPath.toString());
+        } else {
+            log.warning("Unable to detect application path. " +
+                    "This means that ${mvc.applicationPath} and ${mvc.basePath} will not work correctly");
+        }
+
+        if (configuration == null) {
+            throw new IllegalArgumentException("Cannot obtain JAX-RS Configuration instance");
+        }
+
+    }
+
     @Override
     public String getContextPath() {
-        return appConfig.getContextPath();
+        return servletContext.getContextPath();   // normalized by servlet
     }
 
     @Override
     public String getApplicationPath() {
-        return appConfig.getApplicationPath();
+        return applicationPath;
     }
 
     @Override
@@ -99,7 +133,7 @@ public class MvcContextImpl implements MvcContext {
 
     @Override
     public Configuration getConfig() {
-        return appConfig.getConfig();
+        return configuration;
     }
 
     @Override
@@ -110,4 +144,25 @@ public class MvcContextImpl implements MvcContext {
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
+
+    @Override
+    public URI uri(String s) {
+        throw new UnsupportedOperationException("Not implemented yet!");
+    }
+
+    @Override
+    public URI uri(String s, List<Object> list) {
+        throw new UnsupportedOperationException("Not implemented yet!");
+    }
+
+    @Override
+    public URI uri(String s, Map<String, Object> map) {
+        throw new UnsupportedOperationException("Not implemented yet!");
+    }
+
+    @Override
+    public MvcUriBuilder uriBuilder(String s) {
+        throw new UnsupportedOperationException("Not implemented yet!");
+    }
+    
 }

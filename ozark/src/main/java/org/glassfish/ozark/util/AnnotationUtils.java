@@ -39,18 +39,15 @@
  */
 package org.glassfish.ozark.util;
 
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Utility methods to lookup annotations.
  *
  * @author Santiago Pericas-Geertsen
+ * @author Eddú Meléndez
  */
 public final class AnnotationUtils {
 
@@ -69,12 +66,7 @@ public final class AnnotationUtils {
         if (an == null && isProxy(clazz)) {
             an = clazz.getSuperclass().getDeclaredAnnotation(annotationType);
         }
-        if (an != null) {
-            return an;
-        }
-        final BeanManager bm = CDI.current().getBeanManager();
-        final AnnotatedType<?> type = bm.createAnnotatedType(clazz);
-        return type != null ? type.getAnnotation(annotationType) : null;
+        return an;
     }
 
     /**
@@ -186,8 +178,7 @@ public final class AnnotationUtils {
      * @return outcome of test.
      */
     private static boolean hasMvcOrJaxrsAnnotations(Method method) {
-        final List<Annotation> ans = Arrays.asList(method.getDeclaredAnnotations());
-        return ans.stream().anyMatch(a -> {
+        return Arrays.stream(method.getDeclaredAnnotations()).anyMatch(a -> {
             final String an = a.annotationType().getName();
             return an.startsWith("javax.mvc.") || an.startsWith("javax.ws.rs.");
         });
