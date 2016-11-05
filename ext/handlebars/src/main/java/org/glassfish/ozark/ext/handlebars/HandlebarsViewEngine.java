@@ -79,7 +79,7 @@ public class HandlebarsViewEngine extends ViewEngineBase {
         Models models = context.getModels();
         String viewName = context.getView();
 
-        try (PrintWriter writer = context.getWriter();
+        try (PrintWriter writer = context.getResponse().getWriter();
             InputStream resourceAsStream = servletContext.getResourceAsStream(resolveView(context));
             InputStreamReader in = new InputStreamReader(resourceAsStream, "UTF-8");
             BufferedReader bufferedReader = new BufferedReader(in);) {

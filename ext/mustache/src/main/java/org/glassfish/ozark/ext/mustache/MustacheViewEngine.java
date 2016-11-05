@@ -73,7 +73,7 @@ public class MustacheViewEngine extends ViewEngineBase {
     public void processView(ViewEngineContext context) throws ViewEngineException {
         Mustache mustache = factory.compile(resolveView(context));
         try {
-            Writer writer = context.getWriter();
+            Writer writer = context.getResponse().getWriter();
             mustache.execute(writer, context.getModels()).flush();
         } catch (IOException e) {
             throw new ViewEngineException(e);

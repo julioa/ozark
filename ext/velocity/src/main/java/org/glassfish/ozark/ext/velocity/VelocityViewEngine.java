@@ -74,7 +74,7 @@ public class VelocityViewEngine extends ViewEngineBase {
         try {
             Template template = velocityEngine.getTemplate(resolveView(context));
             VelocityContext velocityContext = new VelocityContext(context.getModels());
-            template.merge(velocityContext, context.getWriter());
+            template.merge(velocityContext, context.getResponse().getWriter());
         } catch (IOException e) {
             throw new ViewEngineException(e);
         }

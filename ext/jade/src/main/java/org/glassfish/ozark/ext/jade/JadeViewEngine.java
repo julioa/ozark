@@ -74,7 +74,7 @@ public class JadeViewEngine extends ViewEngineBase {
     public void processView(ViewEngineContext context) throws ViewEngineException {
         String viewPath = resolveView(context);
         try {
-            jade.renderTemplate(jade.getTemplate(viewPath), context.getModels(), context.getWriter());
+            jade.renderTemplate(jade.getTemplate(viewPath), context.getModels(), context.getResponse().getWriter());
         } catch (JadeException | IOException ex) {
             throw new ViewEngineException(String.format("Could not process view %s.", context.getView()), ex);
         }

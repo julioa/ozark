@@ -73,7 +73,7 @@ public class StringTemplateViewEngine extends ViewEngineBase {
 		ST stringTemplate = getStringTemplate(resolveView(context));
 		context.getModels().forEach((key, value) -> add(key, value, stringTemplate));
 		try {
-			PrintWriter writer = context.getWriter();
+			PrintWriter writer = context.getResponse().getWriter();
 			stringTemplate.write(new AutoIndentWriter(writer));
 			stringTemplate.render();
 		} catch (Exception e) {

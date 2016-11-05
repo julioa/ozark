@@ -117,7 +117,7 @@ public class Jsr223ViewEngine extends ViewEngineBase {
         }
 
         try {
-            context.getWriter().print(responseObject.toString());
+            context.getResponse().getWriter().print(responseObject.toString());
         } catch (IOException exception) {
             throw new ViewEngineException("Unable to write response", exception);
         }

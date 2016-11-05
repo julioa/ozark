@@ -75,7 +75,7 @@ public class FreemarkerViewEngine extends ViewEngineBase {
         try {
             final Template template = configuration.getTemplate(resolveView(context));
             template.process(context.getModels(),
-                    new OutputStreamWriter(context.getOutputStream()));
+                    new OutputStreamWriter(context.getResponse().getOutputStream()));
         } catch (TemplateException | IOException e) {
             throw new ViewEngineException(e);
         }

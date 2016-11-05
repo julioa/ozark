@@ -80,7 +80,7 @@ public class AsciiDocViewEngine extends ViewEngineBase {
 
     @Override
     public void processView(ViewEngineContext context) throws ViewEngineException {
-        try (PrintWriter writer = context.getWriter();
+        try (PrintWriter writer = context.getResponse().getWriter();
              InputStream is = servletContext.getResourceAsStream(resolveView(context));
              InputStreamReader isr = new InputStreamReader(is, "UTF-8");
              BufferedReader reader = new BufferedReader(isr)) {
