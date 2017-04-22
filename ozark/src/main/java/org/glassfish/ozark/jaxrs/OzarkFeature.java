@@ -37,10 +37,8 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.ozark.jersey;
+package org.glassfish.ozark.jaxrs;
 
-import org.glassfish.jersey.internal.spi.AutoDiscoverable;
-import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 import org.glassfish.ozark.binding.BindingInterceptorImpl;
 import org.glassfish.ozark.core.ViewRequestFilter;
 import org.glassfish.ozark.core.ViewResponseFilter;
@@ -51,6 +49,7 @@ import org.glassfish.ozark.security.CsrfValidateInterceptor;
 
 import javax.annotation.Priority;
 import javax.mvc.annotation.Controller;
+import javax.mvc.engine.Priorities;
 import javax.servlet.ServletContext;
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.RuntimeType;
@@ -58,29 +57,30 @@ import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.FeatureContext;
 import java.util.Arrays;
+import javax.ws.rs.container.DynamicFeature;
+import javax.ws.rs.container.ResourceInfo;
+import org.glassfish.ozark.jersey.OzarkModelProcessor;
 
 import static org.glassfish.ozark.util.AnnotationUtils.getAnnotation;
 
 /**
- * <p>Jersey feature that sets up the JAX-RS pipeline for MVC processing using one
+ * <p>JAX-RS feature that sets up the JAX-RS pipeline for MVC processing using one
  * or more providers. This feature is enabled only if any of the classes or methods
  * in the application has an instance of the {@link javax.mvc.annotation.Controller} annotation.</p>
  *
- * <p>Takes advantage of the {@link org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable}
- * SPI in Jersey.</p>
- *
  * @author Santiago Pericas-Geertsen
  * @author Eddú Meléndez
+ * @author Dmytro Maidaniuk
  */
 @ConstrainedTo(RuntimeType.SERVER)
-@Priority(AutoDiscoverable.DEFAULT_PRIORITY)
-public class OzarkFeature implements ForcedAutoDiscoverable {
+@Priority(Priorities.FRAMEWORK)
+public class OzarkFeature implements DynamicFeature {
 
     @Context
     private ServletContext servletContext;
 
     @Override
-    public void configure(FeatureContext context) {
+    public void configure(ResourceInfo resourceInfo, FeatureContext context) {
         final Configuration config = context.getConfiguration();
         if (config.isRegistered(ViewResponseFilter.class)) {
             return;     // already registered!

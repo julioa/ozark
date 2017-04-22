@@ -39,10 +39,10 @@
  */
 package org.glassfish.ozark.jersey;
 
-import org.glassfish.jersey.server.model.ModelProcessor;
-import org.glassfish.jersey.server.model.Resource;
-import org.glassfish.jersey.server.model.ResourceMethod;
-import org.glassfish.jersey.server.model.ResourceModel;
+//import org.glassfish.jersey.server.model.ModelProcessor;
+//import org.glassfish.jersey.server.model.Resource;
+//import org.glassfish.jersey.server.model.ResourceMethod;
+//import org.glassfish.jersey.server.model.ResourceModel;
 
 import javax.mvc.annotation.Controller;
 import javax.ws.rs.core.Configuration;
@@ -54,70 +54,70 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Santiago Pericas-Geertsen
  */
-public class OzarkModelProcessor implements ModelProcessor {
+public class OzarkModelProcessor /*implements ModelProcessor*/ {
 
-    @Override
-    public ResourceModel processResourceModel(ResourceModel resourceModel, Configuration configuration) {
-        ResourceModel.Builder rmb = new ResourceModel.Builder(false);
-        resourceModel.getResources().forEach(r -> {
-            rmb.addResource(processResource(r));
-        });
-        return rmb.build();
-    }
-
-    @Override
-    public ResourceModel processSubResource(ResourceModel subResourceModel, Configuration configuration) {
-        return subResourceModel;
-    }
-
-    /**
-     * Updates the default {@code @Produces} list of every controller method whose list is empty.
-     * The new list contains a single media type: "text/html".
-     *
-     * @param r resource to process.
-     * @return newly updated resource.
-     */
-    private static Resource processResource(Resource r) {
-        final boolean isControllerClass = isController(r);
-        Resource.Builder rb = Resource.builder(r);
-        r.getAllMethods().forEach(
-                (ResourceMethod m) -> {
-                    if ((isController(m) || isControllerClass) && m.getProducedTypes().isEmpty()) {
-                        final ResourceMethod.Builder rmb = rb.updateMethod(m);
-                        rmb.produces(MediaType.TEXT_HTML_TYPE);
-                        rmb.build();
-                    }
-                }
-        );
-        r.getChildResources().forEach(cr -> {
-            rb.replaceChildResource(cr, processResource(cr));
-        });
-        return rb.build();
-    }
-
-    /**
-     * Determines if a resource method is a controller.
-     *
-     * @param method resource method to test.
-     * @return outcome of controller test.
-     */
-    private static boolean isController(ResourceMethod method) {
-        return method.getInvocable().getDefinitionMethod().isAnnotationPresent(Controller.class);
-    }
-
-    /**
-     * Determines if a resource is a controller.
-     *
-     * @param resource resource to test.
-     * @return outcome of controller test.
-     */
-    private static boolean isController(Resource resource) {
-        final Boolean b1 = resource.getHandlerClasses().stream()
-                .map(c -> c.isAnnotationPresent(Controller.class))
-                .reduce(Boolean.FALSE, Boolean::logicalOr);
-        final Boolean b2 = resource.getHandlerInstances().stream()
-                .map(o -> o.getClass().isAnnotationPresent(Controller.class))
-                .reduce(Boolean.FALSE, Boolean::logicalOr);
-        return b1 || b2;
-    }
+//    @Override
+//    public ResourceModel processResourceModel(ResourceModel resourceModel, Configuration configuration) {
+//        ResourceModel.Builder rmb = new ResourceModel.Builder(false);
+//        resourceModel.getResources().forEach(r -> {
+//            rmb.addResource(processResource(r));
+//        });
+//        return rmb.build();
+//    }
+//
+//    @Override
+//    public ResourceModel processSubResource(ResourceModel subResourceModel, Configuration configuration) {
+//        return subResourceModel;
+//    }
+//
+//    /**
+//     * Updates the default {@code @Produces} list of every controller method whose list is empty.
+//     * The new list contains a single media type: "text/html".
+//     *
+//     * @param r resource to process.
+//     * @return newly updated resource.
+//     */
+//    private static Resource processResource(Resource r) {
+//        final boolean isControllerClass = isController(r);
+//        Resource.Builder rb = Resource.builder(r);
+//        r.getAllMethods().forEach(
+//                (ResourceMethod m) -> {
+//                    if ((isController(m) || isControllerClass) && m.getProducedTypes().isEmpty()) {
+//                        final ResourceMethod.Builder rmb = rb.updateMethod(m);
+//                        rmb.produces(MediaType.TEXT_HTML_TYPE);
+//                        rmb.build();
+//                    }
+//                }
+//        );
+//        r.getChildResources().forEach(cr -> {
+//            rb.replaceChildResource(cr, processResource(cr));
+//        });
+//        return rb.build();
+//    }
+//
+//    /**
+//     * Determines if a resource method is a controller.
+//     *
+//     * @param method resource method to test.
+//     * @return outcome of controller test.
+//     */
+//    private static boolean isController(ResourceMethod method) {
+//        return method.getInvocable().getDefinitionMethod().isAnnotationPresent(Controller.class);
+//    }
+//
+//    /**
+//     * Determines if a resource is a controller.
+//     *
+//     * @param resource resource to test.
+//     * @return outcome of controller test.
+//     */
+//    private static boolean isController(Resource resource) {
+//        final Boolean b1 = resource.getHandlerClasses().stream()
+//                .map(c -> c.isAnnotationPresent(Controller.class))
+//                .reduce(Boolean.FALSE, Boolean::logicalOr);
+//        final Boolean b2 = resource.getHandlerInstances().stream()
+//                .map(o -> o.getClass().isAnnotationPresent(Controller.class))
+//                .reduce(Boolean.FALSE, Boolean::logicalOr);
+//        return b1 || b2;
+//    }
 }
