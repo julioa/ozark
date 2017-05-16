@@ -82,6 +82,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import javax.ws.rs.ext.Provider;
 import static org.glassfish.ozark.cdi.OzarkCdiExtension.isEventObserved;
 import static org.glassfish.ozark.util.PathUtils.ensureStartingSlash;
 
@@ -99,6 +100,7 @@ import static org.glassfish.ozark.util.PathUtils.ensureStartingSlash;
  *
  * @author Santiago Pericas-Geertsen
  */
+@Provider
 @Produces(MediaType.WILDCARD)
 public class ViewableWriter implements MessageBodyWriter<Viewable> {
 
