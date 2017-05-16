@@ -52,6 +52,7 @@ import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
+import javax.ws.rs.ext.Provider;
 
 /**
  * <p>Response filter that adds the CSRF header with a unique token value. When CSRF
@@ -67,7 +68,7 @@ import java.io.IOException;
  *
  * @author Santiago Pericas-Geertsen
  */
-@Controller
+@Provider
 @Priority(Priorities.HEADER_DECORATOR)
 public class CsrfProtectFilter implements ContainerResponseFilter {
 

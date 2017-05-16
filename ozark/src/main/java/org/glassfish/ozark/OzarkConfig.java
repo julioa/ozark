@@ -42,6 +42,7 @@ package org.glassfish.ozark;
 import javax.mvc.security.Csrf;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.ext.Provider;
 
 /**
  * This class encapsulates the effective runtime configuration. All methods
@@ -50,6 +51,7 @@ import javax.ws.rs.core.Context;
  *
  * @author Christian Kaltepoth
  */
+@Provider
 public class OzarkConfig {
 
     @Context

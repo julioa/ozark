@@ -69,6 +69,8 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
+import javax.ws.rs.ext.Provider;
 
 /**
  * The ApplicationScoped redirect scope manager.
@@ -77,8 +79,11 @@ import java.util.UUID;
  * @author Santiago Pericas-Geertsen
  */
 @ApplicationScoped
+@Provider
 @SuppressWarnings("unchecked")
 public class RedirectScopeManager {
+
+    private static final Logger LOG = Logger.getLogger(RedirectScopeManager.class.getName());
 
     private static final String PREFIX = "org.glassfish.ozark.redirect.";
     private static final String SCOPE_ID = PREFIX + "ScopeId";
@@ -116,10 +121,15 @@ public class RedirectScopeManager {
     @PostConstruct
     public void init() {
 
-        if (config == null || response == null) {
-            throw new IllegalStateException("It looks like @Context injection doesn't work for CDI beans. Please " +
+//        if (config == null || response == null) {
+//            throw new IllegalStateException("It looks like @Context injection doesn't work for CDI beans. Please " +
+//                "make sure you are using a recent version of Jersey.");
+//        }
+        
+        if (config == null) {
+            LOG.warning("It looks like @Context injection doesn't work for CDI beans. Please " +
                 "make sure you are using a recent version of Jersey.");
-        }
+        }        
 
     }
 

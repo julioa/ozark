@@ -57,16 +57,19 @@ import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.FeatureContext;
 import java.util.Arrays;
+import java.util.logging.Logger;
 import javax.ws.rs.container.DynamicFeature;
 import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.ext.Provider;
 import org.glassfish.ozark.jersey.OzarkModelProcessor;
 
 import static org.glassfish.ozark.util.AnnotationUtils.getAnnotation;
 
 /**
- * <p>JAX-RS feature that sets up the JAX-RS pipeline for MVC processing using one
- * or more providers. This feature is enabled only if any of the classes or methods
- * in the application has an instance of the {@link javax.mvc.annotation.Controller} annotation.</p>
+ * <p>
+ * JAX-RS feature that sets up the JAX-RS pipeline for MVC processing using one or more providers. This feature is enabled only
+ * if any of the classes or methods in the application has an instance of the {@link javax.mvc.annotation.Controller}
+ * annotation.</p>
  *
  * @author Santiago Pericas-Geertsen
  * @author Eddú Meléndez
@@ -74,7 +77,10 @@ import static org.glassfish.ozark.util.AnnotationUtils.getAnnotation;
  */
 @ConstrainedTo(RuntimeType.SERVER)
 @Priority(Priorities.FRAMEWORK)
+@Provider
 public class OzarkFeature implements DynamicFeature {
+
+    private static final Logger LOG = Logger.getLogger(OzarkFeature.class.getName());
 
     @Context
     private ServletContext servletContext;
@@ -85,22 +91,31 @@ public class OzarkFeature implements DynamicFeature {
         if (config.isRegistered(ViewResponseFilter.class)) {
             return;     // already registered!
         }
-        final boolean enableOzark = config.getClasses().stream().anyMatch(this::isController)
-                || config.getInstances().stream().map(o -> o.getClass()).anyMatch(this::isController);
+
+        boolean classAnnotation = resourceInfo.getResourceClass().isAnnotationPresent(Controller.class);
+        boolean methodAnnotation = resourceInfo.getResourceMethod().isAnnotationPresent(Controller.class);
+        
+        boolean enableOzark = false;
+
+//        enableOzark = config.getClasses().stream().anyMatch(this::isController)
+//                || config.getInstances().stream().map(o -> o.getClass()).anyMatch(this::isController);
+        
+        enableOzark = enableOzark || classAnnotation || methodAnnotation;
+        
         if (enableOzark) {
             context.register(ViewRequestFilter.class);
             context.register(ViewResponseFilter.class);
-            context.register(ViewableWriter.class);
+            //context.register(ViewableWriter.class);
             context.register(BindingInterceptorImpl.class);
-            context.register(OzarkModelProcessor.class);
+            //context.register(OzarkModelProcessor.class);
             context.register(CsrfValidateInterceptor.class);
             context.register(CsrfProtectFilter.class);
             context.register(LocaleRequestFilter.class);
         }
     }
 
-    private boolean isController(Class<?> c) {
-        return getAnnotation(c, Controller.class) != null ||
-                Arrays.stream(c.getMethods()).anyMatch(m -> getAnnotation(m, Controller.class) != null);
-    }
+//    private boolean isController(Class<?> c) {
+//        return getAnnotation(c, Controller.class) != null
+//                || Arrays.stream(c.getMethods()).anyMatch(m -> getAnnotation(m, Controller.class) != null);
+//    }
 }
