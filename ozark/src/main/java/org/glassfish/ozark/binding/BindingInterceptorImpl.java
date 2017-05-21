@@ -54,6 +54,7 @@ import java.util.logging.Logger;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.mvc.annotation.Controller;
 import javax.validation.Validator;
 import javax.validation.executable.ExecutableValidator;
 
@@ -64,7 +65,9 @@ import static org.glassfish.ozark.binding.BindingResultUtils.updateBindingResult
  *
  * @author Santiago Pericas-Geertsen
  * @author Jakub Podlesak
+ * @author Dmytro Maidaniuk
  */
+@Controller
 @Interceptor
 public class BindingInterceptorImpl implements Serializable {
 
@@ -84,6 +87,7 @@ public class BindingInterceptorImpl implements Serializable {
     @AroundInvoke
     public Object validateMethodInvocation(InvocationContext ctx) throws Exception {
 
+        LOG.info("Started validation interceptor");
         ExecutableValidator executableValidator = validator.forExecutables();
         Object resource = ctx.getTarget();
         final BindingResultImpl bindingResult = null;

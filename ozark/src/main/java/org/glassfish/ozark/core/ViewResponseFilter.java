@@ -47,7 +47,6 @@ import javax.annotation.Priority;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.mvc.Viewable;
-import javax.mvc.annotation.Controller;
 import javax.mvc.annotation.View;
 import javax.mvc.event.AfterControllerEvent;
 import javax.mvc.event.ControllerRedirectEvent;

@@ -57,7 +57,6 @@ import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.FeatureContext;
 import java.util.Arrays;
-import java.util.logging.Logger;
 import javax.ws.rs.container.DynamicFeature;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.ext.Provider;
@@ -80,8 +79,6 @@ import static org.glassfish.ozark.util.AnnotationUtils.getAnnotation;
 @Provider
 public class OzarkFeature implements DynamicFeature {
 
-    private static final Logger LOG = Logger.getLogger(OzarkFeature.class.getName());
-
     @Context
     private ServletContext servletContext;
 
@@ -92,30 +89,24 @@ public class OzarkFeature implements DynamicFeature {
             return;     // already registered!
         }
 
-        boolean classAnnotation = resourceInfo.getResourceClass().isAnnotationPresent(Controller.class);
-        boolean methodAnnotation = resourceInfo.getResourceMethod().isAnnotationPresent(Controller.class);
-        
-        boolean enableOzark = false;
+        boolean enableOzark = config.getClasses().stream().anyMatch(this::isController)
+                || config.getInstances().stream().map(o -> o.getClass()).anyMatch(this::isController);
 
-//        enableOzark = config.getClasses().stream().anyMatch(this::isController)
-//                || config.getInstances().stream().map(o -> o.getClass()).anyMatch(this::isController);
-        
-        enableOzark = enableOzark || classAnnotation || methodAnnotation;
-        
         if (enableOzark) {
             context.register(ViewRequestFilter.class);
             context.register(ViewResponseFilter.class);
-            //context.register(ViewableWriter.class);
+            context.register(ViewableWriter.class);
             context.register(BindingInterceptorImpl.class);
-            //context.register(OzarkModelProcessor.class);
+            context.register(OzarkModelProcessor.class);
             context.register(CsrfValidateInterceptor.class);
             context.register(CsrfProtectFilter.class);
             context.register(LocaleRequestFilter.class);
         }
     }
 
-//    private boolean isController(Class<?> c) {
-//        return getAnnotation(c, Controller.class) != null
-//                || Arrays.stream(c.getMethods()).anyMatch(m -> getAnnotation(m, Controller.class) != null);
-//    }
+    private boolean isController(Class<?> c) {
+        return getAnnotation(c, Controller.class) != null || 
+                Arrays.stream(c.getMethods()).anyMatch(m -> getAnnotation(m, Controller.class) != null);
+    }
+
 }
