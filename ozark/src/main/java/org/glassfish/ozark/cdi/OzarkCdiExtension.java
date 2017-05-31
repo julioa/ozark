@@ -39,9 +39,9 @@
  */
 package org.glassfish.ozark.cdi;
 
+import java.lang.annotation.Annotation;
 import org.glassfish.ozark.MvcContextImpl;
 import org.glassfish.ozark.OzarkConfig;
-import org.glassfish.ozark.binding.BindingInterceptorImpl;
 import org.glassfish.ozark.binding.BindingResultImpl;
 import org.glassfish.ozark.binding.ConstraintViolationTranslator;
 import org.glassfish.ozark.core.*;
@@ -69,6 +69,9 @@ import javax.mvc.event.MvcEvent;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.mvc.annotation.Controller;
 
 /**
  * Class OzarkCdiExtension. Initialize redirect scope as CDI scope. Collect information
@@ -100,7 +103,7 @@ public class OzarkCdiExtension implements Extension {
 
                 // binding
                 BindingResultImpl.class,
-                BindingInterceptorImpl.class,
+                ValidationInterceptor.class,
                 ConstraintViolationTranslator.class,
 
                 // core
@@ -151,6 +154,37 @@ public class OzarkCdiExtension implements Extension {
      */
     public void afterBeanDiscovery(@Observes final AfterBeanDiscovery event, BeanManager beanManager) {
         event.addContext(new RedirectScopeContext());
+    }
+
+    /**
+     * Search for {@link javax.mvc.annotation.Controller} annotation on class level and mirror it with 
+     * @{link org.glassfish.ozark.cdi.MvcValidation}.
+     * 
+     * @param <T>
+     * @param processAnnotatedType 
+     */
+    public <T> void processAnnotatedType(
+            @Observes ProcessAnnotatedType<T> processAnnotatedType) {
+
+        AnnotatedType<T> annotatedType = processAnnotatedType
+                .getAnnotatedType();
+
+        if (annotatedType.getJavaClass().getAnnotation(Controller.class) != null) {
+
+            Annotation validateAnnotation = new Annotation() {
+                @Override
+                public Class<? extends Annotation> annotationType() {
+                    return MvcValidation.class;
+                }
+            };
+
+            AnnotatedTypeWrapper<T> wrapper = new AnnotatedTypeWrapper<>(
+                    annotatedType, annotatedType.getAnnotations());
+            wrapper.addAnnotation(validateAnnotation);
+
+            processAnnotatedType.setAnnotatedType(wrapper);
+        }
+
     }
 
     /**

@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.ozark.binding;
+package org.glassfish.ozark.cdi;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -51,12 +51,16 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Priority;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import javax.mvc.annotation.Controller;
 import javax.validation.Validator;
 import javax.validation.executable.ExecutableValidator;
+import org.glassfish.ozark.binding.BindingResultImpl;
+import org.glassfish.ozark.binding.ConstraintViolationTranslator;
+import org.glassfish.ozark.binding.ConstraintViolationUtils;
+import org.glassfish.ozark.binding.ValidationErrorImpl;
 
 import static org.glassfish.ozark.binding.BindingResultUtils.updateBindingResultViolations;
 
@@ -67,13 +71,14 @@ import static org.glassfish.ozark.binding.BindingResultUtils.updateBindingResult
  * @author Jakub Podlesak
  * @author Dmytro Maidaniuk
  */
-@Controller
+@Priority(Interceptor.Priority.LIBRARY_BEFORE)
+@MvcValidation
 @Interceptor
-public class BindingInterceptorImpl implements Serializable {
+public class ValidationInterceptor implements Serializable {
 
     private static final long serialVersionUID = -5804986456381504613L;
 
-    private static final Logger LOG = Logger.getLogger(BindingInterceptorImpl.class.getName());
+    private static final Logger LOG = Logger.getLogger(ValidationInterceptor.class.getName());
 
     @Inject
     Validator validator;
@@ -87,7 +92,7 @@ public class BindingInterceptorImpl implements Serializable {
     @AroundInvoke
     public Object validateMethodInvocation(InvocationContext ctx) throws Exception {
 
-        LOG.info("Started validation interceptor");
+        LOG.info("Started execution of validation interceptor");
         ExecutableValidator executableValidator = validator.forExecutables();
         Object resource = ctx.getTarget();
         final BindingResultImpl bindingResult = null;
@@ -95,7 +100,7 @@ public class BindingInterceptorImpl implements Serializable {
                 resource, ctx.getMethod(), ctx.getParameters());
 
         ConstraintViolationException cve;
-        
+
         if (!violations.isEmpty()) {
             cve = new ConstraintViolationException(
                     getMessage(ctx.getMethod(), ctx.getParameters(), violations), violations);
@@ -173,4 +178,3 @@ public class BindingInterceptorImpl implements Serializable {
     }
 
 }
-

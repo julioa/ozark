@@ -39,7 +39,7 @@
  */
 package org.glassfish.ozark.jaxrs;
 
-import org.glassfish.ozark.binding.BindingInterceptorImpl;
+import org.glassfish.ozark.cdi.ValidationInterceptor;
 import org.glassfish.ozark.core.ViewRequestFilter;
 import org.glassfish.ozark.core.ViewResponseFilter;
 import org.glassfish.ozark.core.ViewableWriter;
@@ -96,7 +96,7 @@ public class OzarkFeature implements DynamicFeature {
             context.register(ViewRequestFilter.class);
             context.register(ViewResponseFilter.class);
             context.register(ViewableWriter.class);
-            context.register(BindingInterceptorImpl.class);
+            context.register(ValidationInterceptor.class);
             context.register(OzarkModelProcessor.class);
             context.register(CsrfValidateInterceptor.class);
             context.register(CsrfProtectFilter.class);
