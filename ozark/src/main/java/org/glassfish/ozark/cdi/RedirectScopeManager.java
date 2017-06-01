@@ -121,15 +121,10 @@ public class RedirectScopeManager {
     @PostConstruct
     public void init() {
 
-//        if (config == null || response == null) {
-//            throw new IllegalStateException("It looks like @Context injection doesn't work for CDI beans. Please " +
-//                "make sure you are using a recent version of Jersey.");
-//        }
-        
-        if (config == null) {
-            LOG.warning("It looks like @Context injection doesn't work for CDI beans. Please " +
-                "make sure you are using a recent version of Jersey.");
-        }        
+        if (config == null || response == null) {
+            throw new IllegalStateException("It looks like @Context injection doesn't work for CDI beans. Please "
+                    + "make sure you are using a recent version of JAX-RS 2.0 implementation.");
+        }
 
     }
 

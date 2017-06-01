@@ -47,7 +47,6 @@ import javax.annotation.Priority;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.mvc.Viewable;
-import javax.mvc.annotation.Controller;
 import javax.mvc.annotation.View;
 import javax.mvc.event.AfterControllerEvent;
 import javax.mvc.event.ControllerRedirectEvent;
@@ -128,14 +127,14 @@ public class ViewResponseFilter implements ContainerResponseFilter {
         }
 
         final Method method = resourceInfo.getResourceMethod();
-        final Class<?> returnType = method.getReturnType();
+        final Class<?> returnType = method != null ? method.getReturnType() : null;
 
         // Wrap entity type into Viewable, possibly looking at @View
         Object entity = responseContext.getEntity();
         final Class<?> entityType = entity != null ? entity.getClass() : null;
         if (entityType == null) {       // NO_CONTENT
-            View an = getAnnotation(method, View.class);
-            if (an == null) {
+            View an = method != null ? getAnnotation(method, View.class) : null;
+            if (an == null && resourceInfo.getResourceClass() != null) {
                 an = getAnnotation(resourceInfo.getResourceClass(), View.class);
             }
             if (an != null) {
@@ -151,7 +150,7 @@ public class ViewResponseFilter implements ContainerResponseFilter {
                 throw new ServerErrorException(messages.get("VoidControllerNoView", resourceInfo.getResourceMethod()), INTERNAL_SERVER_ERROR);
             }
         } else if (entityType != Viewable.class) {
-            final String view = entity.toString();
+            final String view = entity != null ? entity.toString() : null;
             if (view == null) {
                 throw new ServerErrorException(messages.get("EntityToStringNull", resourceInfo.getResourceMethod()), INTERNAL_SERVER_ERROR);
             }
