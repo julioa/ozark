@@ -109,11 +109,11 @@
                 </executions>
             </plugin>
             <!--
-             This plugin is reponsible for packaging artifacts
-             as OSGi bundles.  Please refer to
-             http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
-             for more information about how to use this plugin.
-           -->
+              This plugin is reponsible for packaging artifacts
+              as OSGi bundles.  Please refer to
+              http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
+              for more information about how to use this plugin.
+            -->
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -209,29 +209,29 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-validator-cdi</artifactId>
-          <version>5.4.1.Final</version>
-          <scope>test</scope>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator-cdi</artifactId>
+            <version>5.4.1.Final</version>
+            <scope>test</scope>
         </dependency>
         <!-- Including some EL implementation required for Hibernate Validator -->
         <dependency>
-          <groupId>org.glassfish</groupId>
-          <artifactId>javax.el</artifactId>
-          <version>3.0.1-b08</version>
-          <scope>test</scope>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>3.0.1-b08</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>org.glassfish.jersey.core</groupId>
-          <artifactId>jersey-common</artifactId>
-          <version>${jersey.version}</version>
-          <scope>test</scope>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>org.glassfish.jersey.core</groupId>
-          <artifactId>jersey-server</artifactId>
-          <version>${jersey.version}</version>
-          <scope>test</scope>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>
