@@ -45,6 +45,7 @@ import javax.mvc.engine.ViewEngineContext;
 import javax.mvc.engine.ViewEngineException;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * Implementation of the JSP view engine. Uses a method in its base class to forward
@@ -53,7 +54,8 @@ import java.io.IOException;
  * @author Santiago Pericas-Geertsen
  * @see org.glassfish.ozark.engine.ViewEngineBase#resolveView(javax.mvc.engine.ViewEngineContext)
  */
-@Priority(Priorities.DEFAULT)
+//@Priority(Priorities.DEFAULT)
+//@ApplicationScoped
 public class JspViewEngine extends ServletViewEngine {
 
     /**

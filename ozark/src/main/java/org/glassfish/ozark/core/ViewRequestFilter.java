@@ -44,7 +44,6 @@ import org.glassfish.ozark.event.BeforeControllerEventImpl;
 import javax.annotation.Priority;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.mvc.annotation.Controller;
 import javax.mvc.event.BeforeControllerEvent;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;

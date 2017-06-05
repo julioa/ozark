@@ -49,6 +49,7 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
 import java.io.IOException;
 import java.util.Locale;
+import javax.ws.rs.core.Context;
 
 /**
  * Implementation of {@link ContainerRequestFilter} responsible for the resolving
@@ -63,7 +64,7 @@ public class LocaleRequestFilter implements ContainerRequestFilter {
     @Inject
     private LocaleResolverChain localeResolverChain;
 
-    @Inject
+    @Context
     private MvcContextImpl mvc;
 
     @Override

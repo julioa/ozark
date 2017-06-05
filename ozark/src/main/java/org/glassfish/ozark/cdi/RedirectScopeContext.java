@@ -47,12 +47,14 @@ import javax.enterprise.inject.spi.CDI;
 import javax.mvc.annotation.RedirectScoped;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import javax.enterprise.context.RequestScoped;
 
 /**
  * The CDI context for RedirectScoped beans.
  * 
  * @author Manfred Riem (manfred.riem at oracle.com)
  */
+@RequestScoped
 public class RedirectScopeContext implements AlterableContext, Serializable {
     
     /**

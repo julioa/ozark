@@ -95,55 +95,55 @@ public class OzarkCdiExtension implements Extension {
     public void beforeBeanDiscovery(@Observes final BeforeBeanDiscovery event, BeanManager beanManager) {
         event.addScope(RedirectScoped.class, true, true);
 
-        CdiUtils.addAnnotatedTypes(event, beanManager,
+//        CdiUtils.addAnnotatedTypes(event, beanManager,
 
                 // .
-                MvcContextImpl.class,
-                OzarkConfig.class,
+                //MvcContextImpl.class,
+                //OzarkConfig.class,
 
                 // binding
-                BindingResultImpl.class,
-                ValidationInterceptor.class,
-                ConstraintViolationTranslator.class,
+                //BindingResultImpl.class,
+                //ValidationInterceptor.class
+                //ConstraintViolationTranslator.class,
 
                 // core
-                Messages.class,
-                ModelsImpl.class,
-                ViewableWriter.class,
-                ViewRequestFilter.class,
-                ViewResponseFilter.class,
+                //Messages.class,
+                //ModelsImpl.class,
+                //ViewableWriter.class,
+                //ViewRequestFilter.class,
+                //ViewResponseFilter.class,
 
                 // engine
-                FaceletsViewEngine.class,
-                JspViewEngine.class,
-                ViewEngineFinder.class,
+                //FaceletsViewEngine.class,
+                //JspViewEngine.class,
+                //ViewEngineFinder.class,
 
                 // security
-                CsrfImpl.class,
-                CsrfProtectFilter.class,
-                CsrfValidateInterceptor.class,
-                EncodersImpl.class,
+                //CsrfImpl.class,
+                //CsrfProtectFilter.class,
+                //CsrfValidateInterceptor.class,
+                //EncodersImpl.class,
 
                 // util
-                CdiUtils.class,
+                //CdiUtils.class,
 
                 // cdi
-                RedirectScopeManager.class,
+                //RedirectScopeManager.class,
 
                 //event
-                AfterControllerEventImpl.class,
-                AfterProcessViewEventImpl.class,
-                BeforeControllerEventImpl.class,
-                BeforeProcessViewEventImpl.class,
-                ControllerRedirectEventImpl.class,
-                MvcEventImpl.class,
+//                AfterControllerEventImpl.class,
+//                AfterProcessViewEventImpl.class,
+//                BeforeControllerEventImpl.class,
+//                BeforeProcessViewEventImpl.class,
+//                ControllerRedirectEventImpl.class,
+//                MvcEventImpl.class
 
                 //locale
-                LocaleRequestFilter.class,
-                LocaleResolverChain.class,
-                DefaultLocaleResolver.class
+                //LocaleRequestFilter.class,
+                //LocaleResolverChain.class,
+                //DefaultLocaleResolver.class
 
-        );
+//        );
     }
 
     /**
@@ -153,7 +153,7 @@ public class OzarkCdiExtension implements Extension {
      * @param beanManager the bean manager.
      */
     public void afterBeanDiscovery(@Observes final AfterBeanDiscovery event, BeanManager beanManager) {
-        event.addContext(new RedirectScopeContext());
+//        event.addContext(new RedirectScopeContext());
     }
 
     /**

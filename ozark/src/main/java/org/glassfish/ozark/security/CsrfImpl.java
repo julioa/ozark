@@ -58,12 +58,14 @@ public class CsrfImpl implements Csrf, Serializable {
 
     private static final long serialVersionUID = -403250971215462525L;
 
-    private UUID token = UUID.randomUUID();
+    private final UUID token = UUID.randomUUID();
 
+    @Override
     public String getName() {
         return CSRF_HEADER;
     }
 
+    @Override
     public String getToken() {
         return token.toString();
     }

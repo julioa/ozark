@@ -39,7 +39,6 @@
  */
 package org.glassfish.ozark.core;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
@@ -47,13 +46,14 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import javax.enterprise.context.RequestScoped;
 
 /**
  * Class Messages.
  *
  * @author Santiago Pericas-Geertsen
  */
-@ApplicationScoped
+@RequestScoped
 public class Messages {
 
     private static final String BASENAME = "ozark";

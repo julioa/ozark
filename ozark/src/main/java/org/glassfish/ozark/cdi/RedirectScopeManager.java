@@ -70,6 +70,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.ext.Provider;
 
 /**
@@ -78,7 +79,7 @@ import javax.ws.rs.ext.Provider;
  * @author Manfred Riem (manfred.riem at oracle.com)
  * @author Santiago Pericas-Geertsen
  */
-@ApplicationScoped
+@RequestScoped
 @Provider
 @SuppressWarnings("unchecked")
 public class RedirectScopeManager {
@@ -94,7 +95,7 @@ public class RedirectScopeManager {
     /**
      * Stores the HTTP servlet request we are working for.
      */
-    @Inject
+    @Context
     private HttpServletRequest request;
 
     /**
@@ -112,7 +113,7 @@ public class RedirectScopeManager {
     /**
      * Stores the MVC context.
      */
-    @Inject
+    @Context
     private MvcContext mvc;
 
     /**

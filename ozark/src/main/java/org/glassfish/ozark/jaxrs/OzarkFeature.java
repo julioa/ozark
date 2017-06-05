@@ -103,14 +103,14 @@ public class OzarkFeature implements DynamicFeature {
         enableOzark = enableOzark || classAnnotation || methodAnnotation;
         
         if (enableOzark) {
-            context.register(ViewRequestFilter.class);
-            context.register(ViewResponseFilter.class);
-            //context.register(ViewableWriter.class);
-            context.register(ValidationInterceptor.class);
-            //context.register(OzarkModelProcessor.class);
-            context.register(CsrfValidateInterceptor.class);
-            context.register(CsrfProtectFilter.class);
-            context.register(LocaleRequestFilter.class);
+//            context.register(ViewRequestFilter.class);
+//            context.register(ViewResponseFilter.class);
+//            //context.register(ViewableWriter.class);
+//            context.register(ValidationInterceptor.class);
+//            //context.register(OzarkModelProcessor.class);
+//            context.register(CsrfValidateInterceptor.class);
+//            context.register(CsrfProtectFilter.class);
+//            context.register(LocaleRequestFilter.class);
         }
     }
 

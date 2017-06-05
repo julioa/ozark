@@ -39,6 +39,7 @@
  */
 package org.glassfish.ozark;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.mvc.security.Csrf;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Context;
@@ -51,6 +52,7 @@ import javax.ws.rs.ext.Provider;
  *
  * @author Christian Kaltepoth
  */
+@ApplicationScoped
 @Provider
 public class OzarkConfig {
 
